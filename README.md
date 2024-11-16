@@ -9,13 +9,15 @@ ider + vs code
 
 
 #### 安装教程
+1.  后端所需
+jdk17
+Maven 3.9.7
 
-1.  前端所需
+2.  前端所需
 node（v14.18.3）    npm（6.14.18）
-`Element-ui` 
+`Element-ui`
 `axios`
 
-2.  xxxx
 3.  xxxx
 
 #### 使用说明
