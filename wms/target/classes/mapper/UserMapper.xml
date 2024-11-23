@@ -24,8 +24,11 @@
         select * from user
     </select>
 
+<!--    用户管理的-->
     <select id="pageCc" resultType="com.wms.entity.User">
         select * from user ${ew.customSqlSegment}
     </select>
+
+
 
 </mapper>

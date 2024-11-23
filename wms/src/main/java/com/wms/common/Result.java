@@ -17,6 +17,10 @@ public class Result {
         return result(404, "失败", 0L, null);
     }
 
+    public static Result fail(String message){
+        return result(404, "失败", 0L, message);
+    }
+
     public static Result suc(){
         return result(200, "成功", 0L, null);
     }

@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wms.common.QueryPageParam;
 import com.wms.common.Result;
+import com.wms.entity.Menu;
 import com.wms.entity.User;
+import com.wms.service.MenuService;
 import com.wms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +33,52 @@ public class UserController {
     @Autowired
     private UserService userService;    // 服务层接口，定义了与用户数据相关的业务逻辑方法。实际的业务逻辑实现通常在另一个类中
 
+    @Autowired
+    private MenuService menuService;    // 服务层接口，定义了与用户数据相关的业务逻辑方法。实际的业务逻辑实现通常在另一个类中
+
+
     @GetMapping("/list")
     public List<User> list(){
         return userService.list();
+    }
+
+    // TODO 登录
+    @PostMapping("/login")
+    public Result login(@RequestBody User user){
+        List<User> list = userService.lambdaQuery()
+                .eq(User::getNo, user.getNo())
+                .eq(User::getPassword, user.getPassword()).list();
+
+        // 设置我们的动态路由，由角色编码决定每个角色有多少权限
+        if (list.size()>0){
+            User user1 = (User) list.get(0);
+//            System.out.println(user1);
+            List<Menu> menuList = menuService.lambdaQuery().like(Menu::getMenuright, user1.getRoleId()).list();
+            HashMap res = new HashMap();
+            res.put("user", user1);
+            res.put("menuList", menuList);
+            return Result.suc(res);
+        }
+
+
+        return Result.fail();
+    }
+
+    // TODO 注册
+    @PostMapping("/register")
+    public Result register(@RequestBody User user) {
+        // 检查用户名是否已存在
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getNo, user.getNo());
+        List<User> list = userService.list(queryWrapper);
+
+        if (!list.isEmpty()) {
+            return Result.fail("用户已存在");
+        }
+
+        // 保存新用户
+        boolean saved = userService.save(user);
+        return saved ? Result.suc("注册成功") : Result.fail();
     }
 
     /**
@@ -95,12 +140,6 @@ public class UserController {
     @GetMapping("/deletes")
     public Result deletes(@RequestParam List<Integer> ids) {
         return userService.removeByIds(ids) ? Result.suc() : Result.fail();
-    }
-
-    // TODO 多删除2
-    @GetMapping("/dels")
-    public boolean dels(@RequestParam List<Integer> ids) {
-        return userService.removeByIds(ids);
     }
 
     // TODO 查询（模糊、匹配） 使用手机号或者姓名作为模糊查询
@@ -181,7 +220,7 @@ public class UserController {
     }
 
 
-    // TODO 自定义分页 + 响应码
+    // TODO 自定义分页 + 查询 + 响应码
     @PostMapping("/listPageC1")
     public Result listPageC1(@RequestBody QueryPageParam query){
         HashMap param = query.getParam();
@@ -189,6 +228,7 @@ public class UserController {
         String name = (String) param.get("name");
         String phone = (String) param.get("phone");
         String sex = (String) param.get("sex");
+        String roleId = (String) param.get("roleId");
 
         Page<User> page = new Page<User>();
         page.setCurrent(query.getPageNum());
@@ -212,6 +252,10 @@ public class UserController {
                 lambdaQueryWrapper.or();
             }
             lambdaQueryWrapper.like(User::getPhone, phone);
+        }
+
+        if (StringUtils.isNotBlank(roleId)) {
+            lambdaQueryWrapper.like(User::getRoleId, roleId);
         }
 
 

@@ -1,3 +1,4 @@
+<!-- 主菜单 -->
 <template>
     <div>
         <!-- 输入框及按钮 -->
@@ -154,6 +155,7 @@ export default {
 
         // 账号的唯一性验证
         let checkDuplicate =(rule,value,callback)=>{
+            console.log("callback" + callback);
             if(this.form.id){
                 return callback();
             }
@@ -315,7 +317,7 @@ export default {
                         type: 'success'
                     });
                     this.centerDialogVisible = false     // 删除成功后关闭窗口
-                    this.loadPost()         // 删除成功后自动刷新列表显示数据
+                    this.handleSizeChange()             // 删除成功后重新获取每页有多少条数据方法，自动刷新列表显示数据
                 } else {
                     this.$message.error('操作失败');
                 }
@@ -333,7 +335,7 @@ export default {
                         type: 'success'
                     });
                     this.centerDialogVisible = false     // 删除成功后关闭窗口
-                    this.loadPost()         // 删除成功后自动刷新列表显示数据
+                    this.handleSizeChange()
                 } else {
                     this.$message.error('操作失败，请先选择需要删除的用户');
                 }
