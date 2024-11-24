@@ -67,6 +67,7 @@ export default {
 <style scoped>
 .el-descriptions {
     width: 90%;
+    height: 20%;
 
     margin: 0 auto;
     text-align: center;

@@ -49,7 +49,7 @@ export default new Vuex.Store({
             // 获取数据库那边对应的角色权限
             state.menu = menuList;
             // console.log("store-state.menu===", state.menu);
-
+            
             // 添加路由
             addNewRoute(menuList)
         }
