@@ -23,7 +23,7 @@ node（v14.18.3）    npm（6.14.18）
 `npm i vuex-persistedstate`
 
 #### 使用说明
-1.  打开后端项目下载好所需的maven依赖，然后看application.yml，更改自己的端口（虚拟机ip）
+1.  打开后端项目下载好所需的maven依赖，然后看application.yml，更改自己的数据库配置
 2.  安装好自己的mysql，把账号密码设置为root，admin,并创建好所有的数据库，在后端代码的sql文件夹中有代码
 3.  运行后端项目
 4.  打开前端项目，使用npm i初始化依赖，然后安装所需的依赖
